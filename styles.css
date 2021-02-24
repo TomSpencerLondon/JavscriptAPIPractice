@@ -1,0 +1,47 @@
+body {
+    background: yellow;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+}
+
+#container div {
+    /* border: 1px solid black; */
+}
+
+header {
+    height: 50px;
+    border: 1px solid black;
+}
+
+.mainContent {
+    display: flex;
+}
+.leftColumn {
+    min-width: 200px;
+    border: 10px solid blue !important;
+}
+
+.rightColumn {
+    background: lightgreen;
+    border: none;
+    display: flex;
+}
+
+.rightContent1 {
+    width: 30%;
+}
+
+.rightContent2 {
+    width: 40%;
+}
+
+.rightContent3 {
+    width: 30%;
+}
