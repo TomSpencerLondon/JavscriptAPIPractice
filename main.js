@@ -2,49 +2,54 @@ function getAlbums() {
 
   const rightColumnElement = document.getElementsByClassName("rightColumn")[0];
 
-  const debugElement = document.getElementById("debug");
+  const loader = document.getElementById("loading");
+  displayLoading(loader);
+
 
   const fetchPromise = fetch(
-    "https://itunes.apple.com/us/rss/topalbums/limit=5/json"
-  );
+    "https://itunes.apple.com/us/rss/topalbums/limit=5/json");
 
-  let loader = `<div class="boxLoading">Loading</div>`;
-  document.getElementsByClassName('rightColumn')[0].innerHTML = loader;
 
-  fetchPromise
-    .then((d) => d.json())
-    .then((data) => {
-      const albumEntries = data.feed.entry;
+  sleep(2000).then(() => {
+    fetchPromise
+      .then((d) => d.json())
+      .then((data) => {
+        const albumEntries = data.feed.entry;
 
-      // TODO1: understand the mapping dunction, and add price attribute to the album
-      const albumsRemapped = albumEntries.map((album) => {
-        return {
-          name: album.title.label,
-          price: album["im:price"].label,
-          image: album["im:image"][0].label,
-        }
-      });
+        // TODO1: understand the mapping dunction, and add price attribute to the album
+        const albumsRemapped = albumEntries.map((album) => {
+          return {
+            name: album.title.label,
+            price: album["im:price"].label,
+            image: album["im:image"][0].label,
+          }
+        });
 
-      const ulElement = document.createElement('ul');
-      ulElement.getAttribute('class', 'albums');
+        const ulElement = document.createElement('ul');
+        ulElement.getAttribute('class', 'albums');
 
-      rightColumnElement.appendChild(ulElement);
+        rightColumnElement.appendChild(ulElement);
+        hideLoading(loader);
+        albumsRemapped.forEach((album) => {
+          const albumTitle = `${album.name}, price: ${album.price}`;
 
-      albumsRemapped.forEach((album) => {
-        const albumTitle = `${album.name}, price: ${album.price}`;
+          const albumHeader = {
+            title: albumTitle,
+            image: album.image
+          };
 
-        const albumHeader = {
-          title: albumTitle,
-          image: album.image
-        };
+          insertListItemIntoParent(ulElement, albumHeader);
+        });
 
-        insertListItemIntoParent(ulElement, albumHeader);
-      });
+      })
+      .catch((error) => {
+        debugElement.innerText = "error: " + error.toString();
+      })
+  });
 
-    })
-    .catch((error) => {
-      debugElement.innerText = "error: " + error.toString();
-    });
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   function insertListItemIntoParent(parent, albumHeader) {
     const liElement = document.createElement('li');
@@ -55,6 +60,18 @@ function getAlbums() {
     liElement.appendChild(albumHeaderElement);
     parent.appendChild(liElement);
   };
+
+  function displayLoading(element) {
+    element.classList.add('display');
+
+    setTimeout(() => {
+      element.classList.remove('display');
+    }, 5000);
+  }
+
+  function hideLoading(element) {
+    element.classList.remove('display');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', getAlbums);
