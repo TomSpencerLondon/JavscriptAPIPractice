@@ -1,6 +1,6 @@
 function getAlbums() {
 
-  const rightColumn = document.getElementsByClassName("rightColumn")[0];
+  const rightColumnElement = document.getElementsByClassName("rightColumn")[0];
 
   const debugElement = document.getElementById("debug");
 
@@ -18,21 +18,40 @@ function getAlbums() {
         return {
           name: album.title.label,
           price: album["im:price"].label,
+          image: album["im:image"][0].label,
         }
       });
 
-      // TODO2: think about (but necessarily implement), on how we could display albums as bulletpoints on the webpage
+      const ulElement = document.createElement('ul');
+      ulElement.getAttribute('class', 'albums');
 
-      return (rightColumn.innerText = JSON.stringify(
-        albumsRemapped,
-        null,
-        4
-      ));
+      rightColumnElement.appendChild(ulElement);
+
+      albumsRemapped.forEach((album) => {
+        const albumTitle = `${album.name}, price: ${album.price}`;
+
+        const albumHeader = {
+          title: albumTitle,
+          image: album.image
+        };
+
+        insertListItemIntoParent(ulElement, albumHeader);
+      });
+
     })
     .catch((error) => {
       debugElement.innerText = "error: " + error.toString();
     });
-}
 
+  function insertListItemIntoParent(parent, albumHeader) {
+    const liElement = document.createElement('li');
+    const img = document.createElement('img');
+    img.setAttribute('src', albumHeader.image);
+    liElement.appendChild(img);
+    const albumHeaderElement = document.createTextNode(albumHeader.title);
+    liElement.appendChild(albumHeaderElement);
+    parent.appendChild(liElement);
+  };
+}
 
 document.addEventListener('DOMContentLoaded', getAlbums);
