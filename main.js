@@ -21,7 +21,7 @@ function getAlbums() {
         }
       });
 
-      // TODO2: think about (but neccesairly implement), on how we could display albums as bulletpoints on the webpage
+      // TODO2: think about (but necessarily implement), on how we could display albums as bulletpoints on the webpage
 
       return (rightColumn.innerText = JSON.stringify(
         albumsRemapped,
