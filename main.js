@@ -8,6 +8,9 @@ function getAlbums() {
     "https://itunes.apple.com/us/rss/topalbums/limit=5/json"
   );
 
+  let loader = `<div class="boxLoading">Loading</div>`;
+  document.getElementsByClassName('rightColumn')[0].innerHTML = loader;
+
   fetchPromise
     .then((d) => d.json())
     .then((data) => {
